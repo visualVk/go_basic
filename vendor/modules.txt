@@ -1,0 +1,4 @@
+# github.com/jesseduffield/lazygit v0.28.2
+## explicit
+# golang.org/x/text v0.3.7
+## explicit

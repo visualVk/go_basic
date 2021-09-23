@@ -1,33 +1,51 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+
+	"example.com/ch4/src/error_handle/filelist"
 )
 
-const CURWD = "src/error_handle/"
+// custom error which have inteface of error and function named Message
+type userError interface {
+	error
+	Message() string
+}
+
+// alias func with appHandler for defining parameter
+type appHandler func(http.ResponseWriter, *http.Request) error
+
+// handle filelist.Hanlder with dealing with error
+func errWrapper(handler appHandler) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := filelist.Handler(w, r)
+		if err != nil {
+			log.Printf("Error handle request %s", err.Error())
+
+			if userErr, ok := err.(userError); ok {
+				http.Error(w, userErr.Message(), http.StatusInternalServerError)
+				return
+			}
+
+			code := http.StatusOK
+			switch {
+			case os.IsNotExist(err):
+				code = http.StatusNotFound
+			case os.IsPermission(err):
+				code = http.StatusForbidden
+			default:
+				code = http.StatusInternalServerError
+			}
+
+			http.Error(w, http.StatusText(code), code)
+		}
+	}
+}
 
 func main() {
-	http.HandleFunc("/list/", func(w http.ResponseWriter, r *http.Request) {
-		path := r.URL.Path[len("/list/"):]
-		path = CURWD + path
-		fmt.Println("file name: ", path)
-		file, err := os.Open(path)
-		if err != nil {
-			panic(err)
-		}
-		defer file.Close()
-
-		all, err := ioutil.ReadAll(file)
-		if err != nil {
-			panic(err)
-		}
-
-		w.Write(all)
-	})
-
+	http.HandleFunc("/", errWrapper(filelist.Handler))
 	err := http.ListenAndServe(":8888", nil)
 
 	if err != nil {
