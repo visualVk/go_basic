@@ -8,6 +8,12 @@ import (
 	"example.com/ch4/src/error_handle/filelist"
 )
 
+// how to handle error/panic
+// 1. define function for dealing with error/panic which return value is error(can be error customed)
+// 	- error customed should be implementing interface of Error
+// 2. define function for dealing with above function's return.
+// 	- use type assertion to tell error
+
 // custom error which have inteface of error and function named Message
 type userError interface {
 	error
@@ -24,7 +30,7 @@ func errWrapper(handler appHandler) func(http.ResponseWriter, *http.Request) {
 		if err != nil {
 			log.Printf("Error handle request %s", err.Error())
 
-			if userErr, ok := err.(userError); ok {
+			if userErr, ok := err.(userError); ok { // type assertion
 				http.Error(w, userErr.Message(), http.StatusInternalServerError)
 				return
 			}
