@@ -23,7 +23,7 @@ type userError interface {
 // alias func with appHandler for defining parameter
 type appHandler func(http.ResponseWriter, *http.Request) error
 
-// handle filelist.Hanlder with dealing with error
+// handle filelist.Hanlder with dealing with error thrown
 func errWrapper(handler appHandler) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := filelist.Handler(w, r)
