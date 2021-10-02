@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 
 	"example.com/ch4/src/error_handle/filelist"
