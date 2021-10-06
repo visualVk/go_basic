@@ -2,3 +2,4 @@
 ## explicit
 # golang.org/x/text v0.3.7
 ## explicit
+# golang.org/x/net/html v0.8.0
