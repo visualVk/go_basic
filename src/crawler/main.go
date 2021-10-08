@@ -1,17 +1,27 @@
 package main
 
 import (
-	"net/http"
-
-	"golang.org/x/text/transform"
+	"example.com/ch4/src/crawler/engine"
+	"example.com/ch4/src/crawler/parser/citylist"
 )
 
 func main() {
-	resp, err := http.Get("https://www.zhenai.com/zhenghun")
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
 
-	transform.NewReader()
+	// err = os.WriteFile("src/crawler/output.out", content, os.ModeAppend.Perm())
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf("%s\n", content)
+	//content, err := fetcher.Fetch("https://www.zhenai.com/zhenghun")
+	//if err != nil {
+	//	panic(err)
+	//}
+
+	//parserResult := parser.ParserCityList(content)
+	//fmt.Printf("%#v", parserResult)
+
+	engine.Run(engine.Request{
+		Url: "https://www.zhenai.com/zhenghun",
+		ParserFunc: parser.ParserCityList,
+	})
 }
