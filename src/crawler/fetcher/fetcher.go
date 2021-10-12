@@ -25,7 +25,8 @@ func Fetch(url string) ([]byte, error) {
 		return nil, fmt.Errorf("wrong status code: %d", resp.StatusCode)
 	}
 
-	utf8Reader := determineEncoding(resp.Body)
+	bufReader := bufio.NewReader(resp.Body)
+	utf8Reader := determineEncoding(bufReader)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +34,7 @@ func Fetch(url string) ([]byte, error) {
 	return ioutil.ReadAll(utf8Reader)
 }
 
-func determineEncoding(reader io.Reader) io.Reader {
+func determineEncoding(reader *bufio.Reader) io.Reader {
 	firstContent, err := bufio.NewReader(reader).Peek(1024)
 	var e encoding.Encoding
 	if err != nil {

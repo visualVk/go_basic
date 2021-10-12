@@ -2,7 +2,6 @@ package engine
 
 import (
 	"example.com/ch4/src/crawler/fetcher"
-	"fmt"
 	"log"
 )
 
@@ -26,9 +25,9 @@ func Run(seeds ...Request){
 		}
 
 		cityListParse := request.ParserFunc(content)
-		for _, cityName := range cityListParse.Items{
-			fmt.Printf("city: %v\n", cityName)
-		}
+		//for _, cityName := range cityListParse.Items{
+		//	fmt.Printf("city: %s\n", cityName)
+		//}
 
 		requests = append(requests, cityListParse.Requests...)
 	}
