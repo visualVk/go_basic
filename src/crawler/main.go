@@ -3,6 +3,7 @@ package main
 import (
 	"example.com/ch4/src/crawler/engine"
 	"example.com/ch4/src/crawler/parser/citylist"
+	"example.com/ch4/src/crawler/scheduler"
 )
 
 func main() {
@@ -19,9 +20,10 @@ func main() {
 
 	//parserResult := parser.ParserCityList(content)
 	//fmt.Printf("%#v", parserResult)
+	e := engine.ConcurrentEngine{Scheduler: &scheduler.Scheduler{}, WorkerCount: 100}
 
-	engine.Run(engine.Request{
-		Url: "https://www.zhenai.com/zhenghun",
+	e.Run(engine.Request{
+		Url:        "https://www.zhenai.com/zhenghun",
 		ParserFunc: parser.ParseCityList,
 	})
 }

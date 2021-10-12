@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"golang.org/x/net/html/charset"
 	"golang.org/x/text/encoding"
@@ -13,8 +14,11 @@ import (
 	"golang.org/x/text/transform"
 )
 
-func Fetch(url string) ([]byte, error) {
+// limit request rate
+var rateLimiter = time.Tick(time.Microsecond * 10)
 
+func Fetch(url string) ([]byte, error) {
+	<-rateLimiter
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
